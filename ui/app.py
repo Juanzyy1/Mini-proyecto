@@ -1,0 +1,2 @@
+class Cola:
+    pass
