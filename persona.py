@@ -12,6 +12,43 @@ class Persona:
         # Documento tipo Tarjeta de Identidad (7 a 10 dígitos)
         self.tipo_doc = "C.C"
         self.documento = str(random.randint(10_000_000, 999_999_9999))
+        
+        
+#------Métodos consultores--------
+
+    def getNombre(self):
+        return self.__nombre
+    
+    def getApellido(self):
+        return self.__apellido
+    
+    def getEdad(self):
+        return self.__edad
+    
+    def getTipo_doc(self):
+        return self.__tipo_doc
+    
+    def getDocumento(self):
+        return self.__documento
+    
+#------Métodos modificadores--------------------
+
+    def setNombre(self, nombre):
+        return self.__nombre
+        
+    def setApellido(self, apellido):
+        return self.__apellido
+        
+    def setEdad(self, edad):
+        return self.__edad
+        
+    def setTipo_doc(self, tipo_doc):
+        return self.__tipo_doc
+        
+    def setDocumento(self, documento):
+        return self.__documento
+        
+#--------------------------------------------------
 
     def subsidio(self):
         if 5 <= self.edad <= 9:
