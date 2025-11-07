@@ -1,6 +1,6 @@
 # main.py
 from logica import generar_cola, procesar_subsidios
-from ui.app import run_app  # 👈 Importamos la interfaz
+from ui.app import run_app  #Importamos la interfaz
 
 def main():
     # Parte en consola (opcional)
@@ -13,6 +13,6 @@ def main():
     print(f"Dinero total entregado: ${total_d:,.0f}")
     print("Cola final:", cola.mostrar())
 
-    # 👇 Ejecutamos la interfaz
+#Ejecutamos la interfaz
 run_app()
 

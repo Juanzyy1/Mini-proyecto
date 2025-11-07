@@ -1,11 +1,10 @@
-# logica.py
 from persona import Persona
 from cola import Cola
 
 def generar_cola(cantidad=50):
     cola = Cola()
-    for i in range(1, cantidad + 1):
-        cola.encolar(Persona(i))
+    for _ in range(cantidad):
+        cola.encolar(Persona())
     return cola
 
 def procesar_subsidios(cola):
