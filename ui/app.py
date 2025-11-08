@@ -77,9 +77,10 @@ class MainWindow(QWidget):
     def actualizar_tabla(self):
         self.tabla.setRowCount(self.cola.tamaño())
         for i, persona in enumerate(self.cola.items):
-            self.tabla.setItem(i, 0, QTableWidgetItem(f"{persona.nombre} {persona.apellido}"))
-            self.tabla.setItem(i, 1, QTableWidgetItem(str(persona.edad)))
-            self.tabla.setItem(i, 2, QTableWidgetItem(persona.documento))
+            self.tabla.setItem(i, 0, QTableWidgetItem(f"{persona.get_nombre()} {persona.get_apellido()}"))
+            self.tabla.setItem(i, 1, QTableWidgetItem(str(persona.get_edad())))
+            self.tabla.setItem(i, 2, QTableWidgetItem(persona.get_documento()))
+
 
     def atender_persona(self):
         persona = self.cola.desencolar()
@@ -93,13 +94,15 @@ class MainWindow(QWidget):
         self.atendidos += 1
         self.totalDinero += subsidio
 
+
         self.infoCard.setText(
             f"🧑 Atendiendo beneficiario:\n"
-            f"👤 Nombre: {persona.nombre} {persona.apellido}\n"
-            f"🎂 Edad: {persona.edad} años\n"
-            f"🪪 Documento: {persona.documento}\n"
+            f"👤 Nombre: {persona.get_nombre()} {persona.get_apellido()}\n"
+            f"🎂 Edad: {persona.get_edad()} años\n"
+            f"🪪 Documento: {persona.get_documento()}\n"
             f"💵 Subsidio entregado: ${subsidio:,}"
         )
+
 
         self.resPersonas.setText(f"Personas atendidas: {self.atendidos}")
         self.resDinero.setText(f"Dinero total entregado: ${self.totalDinero:,}")
