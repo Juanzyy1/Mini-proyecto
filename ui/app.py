@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QPushButton,QLa
 )
 from qt_material import apply_stylesheet
 from logica import generar_cola
+from datetime import datetime
 
 
 class MainWindow(QWidget):
@@ -68,6 +69,25 @@ class MainWindow(QWidget):
         self.resDinero = QLabel("Dinero total entregado: $0")
         layout.addWidget(self.resPersonas)
         layout.addWidget(self.resDinero)
+        
+        
+        #Botón para guardar el registro en un archivo txt
+        self.btnGuardar = QPushButton("💾 Guardar registro de beneficiarios atendidos"  )
+        self.btnGuardar.setStyleSheet("""
+        
+            QPushButton {
+                font-size: 15px;
+                padding: 8px;
+                border-radius: 6px;
+                background-color: #4caf50;
+                color: white;
+            }
+            QPushButton:hover {
+                background-color: #66bb6a;
+            }
+        """)
+        self.btnGuardar.clicked.connect(self.guardar_en_txt)
+        layout.addWidget(self.btnGuardar)
 
         self.setLayout(layout)
 
@@ -109,6 +129,21 @@ class MainWindow(QWidget):
         self.progress.setValue(int((self.atendidos / self.totalPersonasInicial) * 100))
 
         self.actualizar_tabla()
+        
+        
+    def guardar_en_txt(self):
+        #Guarda el historial actual de beneficiarios atendidos
+        try:
+            with open("registro_subsidios.txt", "a", encoding="utf-8") as f:
+                f.write("\n--- REGISTRO DE ATENCIÓN ---\n")
+                f.write(f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+                f.write(f"Personas atendidas: {self.atendidos}\n")
+                f.write(f"Dinero total entregado: ${self.totalDinero:,}\n\n")
+            
+            QMessageBox.information(self, "Éxito", "✅ Registro guardado en 'registro_subsidios.txt'")
+        except Exception as e:
+            QMessageBox.warning(self, "Error", f"No se pudo guardar el archivo.\n{e}")
+
 
 
 def run_app():

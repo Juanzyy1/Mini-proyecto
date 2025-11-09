@@ -26,36 +26,36 @@ class Cola:
 
 
     def getItem(self):
-        return self.items
+        return self.__items
     
     def getDesencolar(self):
-        return self.desencolar
+        return self.__desencolar
 
     def getEsta_vacia(self):
-        return self.esta_vacia
+        return self.__esta_vacia
     
     def getTamaño(self):
-        return self.tamaño
+        return self.__tamaño
     
     def getMostrar(self):
-        return self.mostrar
+        return self.__mostrar
     
     
     
     def setItem(self):
-        return self.items
+        return self.__items
     
     def setDesencolar(self):
-        return self.desencolar
+        return self.__desencolar
     
     def setEsta_vacia(self):
-        return self.esta_vacia
+        return self.__esta_vacia
     
     def setTamaño(self):
-        return self.tamaño
+        return self.__tamaño
     
     def setMostrar(self):
-        return self.mostrar
+        return self.__mostrar
     
     
     

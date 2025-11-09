@@ -1,0 +1,30 @@
+
+--- REGISTRO DE ATENCIÓN ---
+Fecha: 2025-11-09 18:30:41
+Personas atendidas: 0
+Dinero total entregado: $0
+
+
+--- REGISTRO DE ATENCIÓN ---
+Fecha: 2025-11-09 18:32:08
+Personas atendidas: 4
+Dinero total entregado: $320,000
+
+
+--- REGISTRO DE ATENCIÓN ---
+Fecha: 2025-11-09 18:32:45
+Personas atendidas: 25
+Dinero total entregado: $1,980,000
+
+
+--- REGISTRO DE ATENCIÓN ---
+Fecha: 2025-11-09 18:33:17
+Personas atendidas: 0
+Dinero total entregado: $0
+
+
+--- REGISTRO DE ATENCIÓN ---
+Fecha: 2025-11-09 18:43:22
+Personas atendidas: 50
+Dinero total entregado: $4,040,000
+
