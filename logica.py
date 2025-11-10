@@ -1,17 +1,36 @@
 from persona import Persona
 from cola import Cola
 import os
-from typing import Tuple
+from typing import Tuple, Optional
+
 
 class Logica:
+    """
+    Gestiona la atención de personas que reciben subsidios mediante una cola (FIFO).
+    
+    Funcionalidades principales:
+    - Generar una cola de personas con edades aleatorias.
+    - Atender a todas o una sola persona por vez.
+    - Registrar historial en archivo de texto.
+    - Calcular monto total entregado incluyendo sesiones pasadas.
+    """
+
     def __init__(self):
-        self.cola = Cola()
-        self.total_entregado = 0
-        self.archivo = "beneficiarios.txt"
+        self.cola: Cola = Cola()
+        self.total_entregado: int = 0
+        self.archivo: str = "beneficiarios.txt"
         self.cargar_historial()
 
     def generar_cola(self, cantidad: int = 50) -> Cola:
-    #Llena self.cola con `cantidad` personas (edades aleatorias)."""
+        """
+        Llena la cola con `cantidad` de personas nuevas generadas aleatoriamente.
+        
+        Args:
+            cantidad (int): Número de personas a encolar.
+        
+        Returns:
+            Cola: Cola generada con nuevas personas.
+        """
         self.cola = Cola()
         for _ in range(cantidad):
             self.cola.encolar(Persona())
@@ -19,8 +38,13 @@ class Logica:
 
     def procesar_subsidios(self) -> Tuple[int, int]:
         """
-        Procesa (desencola) todas las personas de self.cola,
-        guarda cada persona en el archivo y devuelve (total_personas, total_dinero).
+        Atiende a todas las personas en la cola hasta dejarla vacía.
+        Cada persona atendida se registra en archivo.
+
+        Returns:
+            Tuple[int, int]:
+                - Total de personas atendidas.
+                - Total de dinero entregado en esta ejecución.
         """
         total_personas = 0
         total_dinero = 0
@@ -32,41 +56,55 @@ class Logica:
             monto = self._obtener_subsidio_de_persona(persona)
             total_dinero += monto
 
-            # Guardar registro de la persona atendida
             self.guardar_persona(persona, monto)
 
         self.total_entregado += total_dinero
         return total_personas, total_dinero
 
-    def atender_una_persona(self):
+    def atender_una_persona(self) -> Tuple[Optional[Persona], int]:
         """
-        Atender solo la primera persona en la cola (útil para tu botón 'Atender').
-        Devuelve la persona atendida y el monto entregado (o (None, 0) si cola vacía).
+        Atiende únicamente a la primera persona de la cola (si existe).
+        
+        Returns:
+            (Persona, int): Persona atendida y monto entregado.
+            Si la cola está vacía → (None, 0)
         """
         if self.cola.esta_vacia():
             return None, 0
 
         persona = self.cola.desencolar()
         monto = self._obtener_subsidio_de_persona(persona)
+
         self.total_entregado += monto
         self.guardar_persona(persona, monto)
+
         return persona, monto
 
-    def guardar_persona(self, persona, monto: int):
-      #Guarda la información de la persona atendida en self.archivo.
+    def guardar_persona(self, persona: Persona, monto: int) -> None:
+        """
+        Guarda en archivo la información de una persona atendida.
+
+        Formato del archivo:
+            Edad | Nombre Apellido | Documento | Subsidio
+        """
         with open(self.archivo, "a", encoding="utf-8") as f:
-            # Si tienes nombre/apellidos/documento en la clase Persona, puedes añadirlos aquí.
+            # Se obtienen datos si existen en la clase Persona
             nombre = getattr(persona, "get_nombre", lambda: "")()
             apellido = getattr(persona, "get_apellido", lambda: "")()
             documento = getattr(persona, "get_documento", lambda: "")()
 
-            f.write(f"Edad: {getattr(persona, 'edad', '')} | ")
-            f.write(f"Nombre: {nombre} {apellido} | ")
-            f.write(f"Documento: {documento} | ")
-            f.write(f"Subsidio: {monto}\n")
+            f.write(
+                f"Edad: {getattr(persona, 'edad', '')} | "
+                f"Nombre: {nombre} {apellido} | "
+                f"Documento: {documento} | "
+                f"Subsidio: {monto}\n"
+            )
 
-    def cargar_historial(self):
-        #Carga el total_entregado sumando los montos que haya en el archivo si existe
+    def cargar_historial(self) -> None:
+        """
+        Carga los valores de subsidio ya registrados en el archivo.
+        Suma al total_entregado para mantener persistencia entre ejecuciones.
+        """
         if os.path.exists(self.archivo):
             with open(self.archivo, "r", encoding="utf-8") as f:
                 for linea in f:
@@ -74,30 +112,34 @@ class Logica:
                         try:
                             monto = int(linea.split("Subsidio:")[1].strip())
                             self.total_entregado += monto
-                        except Exception:
-                            pass
+                        except ValueError:
+                            pass  # Ignora líneas mal formadas
 
-    def _obtener_subsidio_de_persona(self, persona) -> int:
+    def _obtener_subsidio_de_persona(self, persona: Persona) -> int:
         """
-        Devuelve el subsidio de la persona. Soporta:
-        - persona.subsidio  (atributo)
-        - persona.subsidio() (método)
-        - o un método get_subsidio()
+        Obtiene el subsidio según la implementación en Persona.
+
+        Compatible con:
+        - Atributo: persona.subsidio
+        - Método: persona.subsidio()
+        - Método alterno: persona.get_subsidio()
+
+        Returns:
+            int: Monto del subsidio; 0 si no se puede obtener.
         """
-        # Priorizar método callable
         attr = getattr(persona, "subsidio", None)
         if callable(attr):
             try:
                 return int(attr())
             except Exception:
                 pass
-        # Si es atributo
+
         if attr is not None:
             try:
                 return int(attr)
             except Exception:
                 pass
-        # Intentar otros nombres comunes
+
         method = getattr(persona, "get_subsidio", None)
         if callable(method):
             try:
@@ -105,12 +147,14 @@ class Logica:
             except Exception:
                 pass
 
-        # Si no se encuentra, devolver 0
-        return 0
+        return 0  # Valor seguro si no hay subsidio definido
 
 
-# --- Función de compatibilidad
+# --- Función de compatibilidad ----
 def generar_cola(cantidad: int = 50) -> Cola:
+    """
+    Función auxiliar para crear una cola rápida sin instanciar Logica.
+    """
     c = Cola()
     for _ in range(cantidad):
         c.encolar(Persona())

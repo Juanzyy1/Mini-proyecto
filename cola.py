@@ -1,63 +1,34 @@
 class Cola:
+    """
+    Cola (FIFO) implementada con lista.
+    Notas:
+      - encolar: O(1)
+      - desencolar: O(n) (por pop(0) en listas).
+    """
+
     def __init__(self):
         self.items = []
-    
+
     def encolar(self, persona):
+        """Añade `persona` al final de la cola."""
         self.items.append(persona)
-        
 
     def desencolar(self):
+        """Elimina y devuelve el primer elemento; devuelve None si está vacía."""
         if not self.esta_vacia():
             return self.items.pop(0)
         return None
 
     def esta_vacia(self):
+        """Devuelve True si la cola no tiene elementos."""
         return len(self.items) == 0
 
     def tamaño(self):
+        """Devuelve el número de elementos en la cola."""
         return len(self.items)
 
     def mostrar(self):
+        """Devuelve una lista con la representación en cadena de cada elemento."""
         return [str(p) for p in self.items]
-    
-    
-    
-#----Métodos consultores--------
 
 
-    def getItem(self):
-        return self.__items
-    
-    def getDesencolar(self):
-        return self.__desencolar
-
-    def getEsta_vacia(self):
-        return self.__esta_vacia
-    
-    def getTamaño(self):
-        return self.__tamaño
-    
-    def getMostrar(self):
-        return self.__mostrar
-    
-    
-    
-    def setItem(self):
-        return self.__items
-    
-    def setDesencolar(self):
-        return self.__desencolar
-    
-    def setEsta_vacia(self):
-        return self.__esta_vacia
-    
-    def setTamaño(self):
-        return self.__tamaño
-    
-    def setMostrar(self):
-        return self.__mostrar
-    
-    
-    
-    
-    

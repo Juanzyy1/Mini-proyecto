@@ -1,63 +1,38 @@
 import random
+from typing import Optional
 
 nombres = ["Juan", "María", "Carlos", "Luisa", "Daniel", "Valentina", "Andrés", "Sofía"]
 apellidos = ["García", "López", "Rodríguez", "Martínez", "Morales", "Gómez", "Ruiz"]
 
+
 class Persona:
+    """
+    Representa a un niño o adolescente beneficiario del subsidio.
 
-    def __init__(self):
-        self.nombre = random.choice(nombres)
-        self.apellido = random.choice(apellidos)
-        self.edad = random.randint(5, 17)
-        
-        # Documento tipo Tarjeta de Identidad (7 a 10 dígitos)
-        self.tipo_doc = "C.C"
-        self.documento = str(random.randint(10_000_000, 999_999_9999))
-        
-        
-#------Métodos consultores--------
+    Atributos:
+        nombre (str): Nombre del beneficiario.
+        apellido (str): Apellido del beneficiario.
+        edad (int): Edad entre 5 y 17 años.
+        tipo_doc (str): 'TI' si es menor de 18, si fuera adulto sería 'CC'.
+        documento (str): Número de documento entre 7 y 10 dígitos.
 
-    def getNombre(self):
-        return self.__nombre
-    
-    def getApellido(self):
-        return self.__apellido
-    
-    def getEdad(self):
-        return self.__edad
-    
-    def getTipo_doc(self):
-        return self.__tipo_doc
-    
-    def getDocumento(self):
-        return self.__documento
-    
-#------Métodos modificadores--------------------
+    Métodos relevantes:
+        subsidio() -> int: Retorna el monto del subsidio según la edad.
+        info_corta() -> str: Representación resumida del beneficiario.
+    """
 
-    def setNombre(self, nombre):
-        return self.__nombre
-        
-    def setApellido(self, apellido):
-        return self.__apellido
-        
-    def setEdad(self, edad):
-        return self.__edad
-        
-    def setTipo_doc(self, tipo_doc):
-        return self.__tipo_doc
-        
-    def setDocumento(self, documento):
-        return self.__documento
-        
-#--------------------------------------------------
+    def __init__(
+        self,
+        nombre: Optional[str] = None,
+        apellido: Optional[str] = None,
+        edad: Optional[int] = None,
+        documento: Optional[str] = None
+    ):
+        self._nombre = nombre or random.choice(nombres)
+        self._apellido = apellido or random.choice(apellidos)
+        self._edad = edad if edad is not None else random.randint(5, 17)
 
-    def __init__(self, nombre=None, apellido=None, edad=None, documento=None):
-        self._nombre = nombre if nombre else random.choice(nombres)
-        self._apellido = apellido if apellido else random.choice(apellidos)
-        self._edad = edad if edad else random.randint(5, 17)
-
-
-        # Tipo de documento según edad
+        # Tipo de documento basado en la edad
         self._tipo_doc = "TI" if self._edad < 18 else "CC"
 
         self._documento = (
@@ -65,57 +40,60 @@ class Persona:
             else str(random.randint(10_000_000, 999_999_9999))
         )
 
-    # --------- Métodos Consultores ---------
-    def get_nombre(self):
+    # ---------(Getters) Consultores---------
+    def get_nombre(self) -> str:
         return self._nombre
 
-    def get_apellido(self):
+    def get_apellido(self) -> str:
         return self._apellido
 
-    def get_edad(self):
+    def get_edad(self) -> int:
         return self._edad
 
-    def get_documento(self):
+    def get_documento(self) -> str:
         return self._documento
 
-    def get_tipo_doc(self):
+    def get_tipo_doc(self) -> str:
         return self._tipo_doc
 
-    # --------- Métodos Modificadores  ---------
-    def set_nombre(self, nombre):
+    # ---------(Setters) Modificadores---------
+    def set_nombre(self, nombre: str) -> None:
         if nombre.strip():
             self._nombre = nombre
 
-    def set_apellido(self, apellido):
+    def set_apellido(self, apellido: str) -> None:
         if apellido.strip():
             self._apellido = apellido
 
-    def set_edad(self, edad):
+    def set_edad(self, edad: int) -> None:
         if 5 <= edad <= 17:
             self._edad = edad
             self._tipo_doc = "TI"
         else:
-            raise ValueError("Edad fuera de rango (5-17)")
+            raise ValueError("La edad debe estar entre 5 y 17 años.")
 
-    def set_documento(self, documento):
+    def set_documento(self, documento: str) -> None:
         if documento.isdigit() and 7 <= len(documento) <= 10:
             self._documento = documento
         else:
-            raise ValueError("Documento inválido")
+            raise ValueError("Documento inválido. Debe tener 7 a 10 dígitos.")
 
-    # --------- Otros métodos funcionales ---------
-    def subsidio(self):
+    # --------- Lógica del subsidio ---------
+    def subsidio(self) -> int:
+        """Devuelve el subsidio según la edad."""
         if 5 <= self._edad <= 9:
-            return 60000
+            return 60_000
         elif 10 <= self._edad <= 13:
-            return 80000
-        return 100000
+            return 80_000
+        return 100_000
 
-    #Representaciones visuales
-    def info_corta(self):
+    # --------- Representaciones ---------
+    def info_corta(self) -> str:
+        """Forma resumida para mostrar en colas o UI."""
         return f"{self._nombre} {self._apellido} - {self._edad} años"
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """Forma detallada para guardar o imprimir en historial."""
         return (
             f"{self._nombre} {self._apellido} | "
             f"Edad: {self._edad} | "

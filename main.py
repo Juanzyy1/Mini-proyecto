@@ -1,37 +1,29 @@
-# main.py
 from logica import Logica
-from ui.app import run_app  #Importamos la interfaz
+from ui.app import run_app
 
-def main():
-    # Parte en consola (opcional)
+
+def main() -> None:
+    """
+    Prueba de consola para verificar funcionamiento de la lógica sin interfaz gráfica.
+
+    Pasos:
+    1. Se genera una cola simulada con personas.
+    2. Se muestra la cola inicial en consola.
+    3. Se procesan los subsidios (se atienden todas las personas).
+    4. Se muestra el total atendido y el total de dinero entregado.
+    """
     logica = Logica()
     cola = logica.generar_cola()
-    print("Cola inicial:")
+
+    print("📌 Cola inicial:")
     print("\n".join(cola.mostrar()))
 
-    total_p, total_d = logica.procesar_subsidios(cola)
-    print(f"\nPersonas atendidas: {total_p}")
-    print(f"Dinero total entregado: ${total_d:,.0f}")
-    print("Cola final:", cola.mostrar())
-
-
-def guardar_en_txt(self):
-    """Guarda el historial actual de beneficiarios atendidos"""
-    try:
-        with open("beneficiarios.txt", "a", encoding="utf-8") as f:
-            f.write(f"\n--- Resumen de sesión ---\n")
-            f.write(f"Personas atendidas: {self.atendidos}\n")
-            f.write(f"Dinero total entregado: ${self.totalDinero:,}\n")
-            f.write(f"--------------------------\n")
-
-        from PyQt6.QtWidgets import QMessageBox
-        QMessageBox.information(self, "✅ Guardado", "El historial fue guardado correctamente en 'beneficiarios.txt'")
-    except Exception as e:
-        from PyQt6.QtWidgets import QMessageBox
-        QMessageBox.warning(self, "❌ Error", f"No se pudo guardar el archivo:\n{e}")
+    total_p, total_d = logica.procesar_subsidios()
+    print(f"\n✅ Personas atendidas: {total_p}")
+    print(f"💰 Dinero total entregado: ${total_d:,.0f}")
+    print(f"📌 Cola final: {cola.mostrar()}")
 
 
 
-#Ejecutamos la interfaz
-run_app()
+run_app()  # Ejecución de la interfaz gráfica
 
